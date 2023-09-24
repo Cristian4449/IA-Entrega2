@@ -34,4 +34,4 @@ def esconderVentanaMenu(event):
 
 ventanaIndex.bind("Escape",esconderVentanaMenu)
 
-#ventanaIndex.mainloop()
+ventanaIndex.mainloop()

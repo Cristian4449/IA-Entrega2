@@ -1,12 +1,12 @@
 #PAG PRACTICA
 import tkinter as tk
-
+import Entrenamiento as e
 
 ventanaMenu = tk.Tk()
 ventanaMenu.withdraw()
 ventanaMenu.geometry("600x600")
 
-vector=[]
+variableClasificacion=None
 
 valorFruta = tk.IntVar()
 papa = tk.Button(ventanaMenu, text="PAPA", width=20, height=5,command=lambda : valorFruta.set(0))
@@ -17,6 +17,8 @@ frutaMaestro2=tk.Button(ventanaMenu,text="FRUTA NUEVA 2",width=20,height=5,comma
 
 def caso():
     ventanaMenu.withdraw()
+    e.llamarEntrada()
+    e.extraerDatos(variableClasificacion,valorFruta.get())
 
 guardar = tk.Button(ventanaMenu,text="GUARDAR FRUTA",width=10,height=3,command=caso)
 
@@ -29,7 +31,8 @@ frutaMaestro2.place(x=230,y=450)
 
 
 def entrenamientoClasificacion(entrada):
-    return entrada
+    global variableClasificacion
+    variableClasificacion=entrada
 
 def retrocederInicio(event):
     from Index import mostrarVentanaInicio

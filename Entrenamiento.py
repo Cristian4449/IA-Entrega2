@@ -4,12 +4,12 @@ import cv2 as c
 from PIL import Image, ImageTk
 import numpy as np
 import json
-import pandas as pd
+import os
 
 ventanaEntrenamiento = tk.Tk()
 
 ventanaEntrenamiento.geometry("600x600")
-#ventanaEntrenamiento.withdraw()
+ventanaEntrenamiento.withdraw()
 
 vector=[]
 ventanaMostrar =None
@@ -68,7 +68,10 @@ def capturarArea(event):
     promedioR =suma_r//totalPixeles    
     promedioG =suma_g//totalPixeles    
     promedioB =suma_b//totalPixeles    
+
     print(f"EL PROMEDIO QUE DA DE LOS COLORES ES :    R:   {promedioR}   G: {promedioG}  B: {promedioB}")
+
+    guardarDatosParaEntrenar(promedioR,promedioG,promedioB)
 
 # Inicializa la camara o la fuente de video
 cap = c.VideoCapture('http://192.168.18.9:4747/video')
@@ -82,30 +85,15 @@ actualizarVideo()
 
 etiquetaVideo.bind("<Button-1>",capturarArea)
 
-
-def extraerDatosMenu(entradaClase,entradaFruta):
-    global vector
-    vector=entradaClase,entradaFruta
-
 def guardarDatosParaEntrenar(r,g,b):
-    archivo_excel='IA-Entrega2\Frutas.xlsx'
-    df=pd.read(archivo_excel)
-    
-    nuevos_datos={
-        'R':r,
-        'G':g,
-        'B':b,
-        'Clase':vector[1]
-    }
-    #Crear DataFrame
-    df_nuevosDatos=pd.DataFrame(nuevos_datos)
-    
-    #Concatenando el DataFrame que ya existe con el nuevo
-    df_final=pd.concat([df,df_nuevosDatos],ignore_index=True)
-    
-    #Guardar el dataFrame Actualizado en el mismo
-    with pd.ExcelWriter(archivo_excel,engine='openpyxl',mode='a') as writer:
-        df_final.to_excel(writer,index=False,sheet_name='Hoja1')
-    print("DATOS AGREGADEISHON")
+    datos_json=[]
+    with open('Frutas.json','r') as archivo_json:
+        datos_json=json.load(archivo_json)
+        datos_json.append({'R':r,'G':g,'B':b,'Clase':vector[1]})
+    with open('Frutas.json','w')as archivo_json:
+        json.dump(datos_json,archivo_json,indent=4)
+        print("SE GUARDARON LOS DATOS PARA LA CLASE  "+vector[1])
 
-ventanaEntrenamiento.mainloop()
+def extraerDatos(clasificacion,fruta):
+    global vector
+    vector=clasificacion,fruta
