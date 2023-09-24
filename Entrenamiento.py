@@ -87,12 +87,13 @@ etiquetaVideo.bind("<Button-1>",capturarArea)
 
 def guardarDatosParaEntrenar(r,g,b):
     datos_json=[]
-    with open('Frutas.json','r') as archivo_json:
-        datos_json=json.load(archivo_json)
-        datos_json.append({'R':r,'G':g,'B':b,'Clase':vector[1]})
+    if os.path.exists('Frutas.json'):
+        with open('Frutas.json','r') as archivo_json:
+            datos_json=json.load(archivo_json)
+            datos_json.append({'R':r,'G':g,'B':b,'Clase':vector[1]})
     with open('Frutas.json','w')as archivo_json:
         json.dump(datos_json,archivo_json,indent=4)
-        print("SE GUARDARON LOS DATOS PARA LA CLASE  "+vector[1])
+        print(f"SE GUARDARON LOS DATOS PARA LA CLASE  {vector[1]}")
 
 def extraerDatos(clasificacion,fruta):
     global vector
