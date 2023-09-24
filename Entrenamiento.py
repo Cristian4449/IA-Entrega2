@@ -98,3 +98,13 @@ def guardarDatosParaEntrenar(r,g,b):
 def extraerDatos(clasificacion,fruta):
     global vector
     vector=clasificacion,fruta
+
+def retrocederMenu(event):
+    from Menu import mostrarVentana
+    mostrarVentana()
+    
+ventanaEntrenamiento.bind("<Escape>",retrocederMenu)
+
+def entrenarSacarPesos():
+    
+    

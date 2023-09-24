@@ -39,3 +39,7 @@ def retrocederInicio(event):
     mostrarVentanaInicio()
 
 ventanaMenu.bind("<Escape>",retrocederInicio)
+
+def mostrarVentana():
+    ventanaMenu.deiconify()
+    e.ventanaEntrenamiento.withdraw()
