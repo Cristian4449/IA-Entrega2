@@ -88,6 +88,7 @@ class PerceptronMulticapa():
         self.numero_entradas = numero_entradas
         self.neuronas_ocultas = neuronas_ocultas
         self.neurona_salida = neurona_salida
+        
         # Variables de aprendizaje
         self.salida_esperada = 0 # Salida deseada en iteracion actual
         self.error_red = 1 # Error total de la red en una conjunto de iteraciones
@@ -193,7 +194,7 @@ class PerceptronMulticapa():
         # Error cuadratico medio
         self.Error_cuadratico = ((1/len(arreglo_clases)) * (sum(self.Error_actual)))
         self.error_red = (self.Error_cuadratico - self.Error_prev)
-
+'''
 #Inicializar Perceptron Multicapa
 Perceptro_Multi = PerceptronMulticapa(arreglo_entrenamiento,arreglo_clases,w_1,w_2,umbral_neurona_salida,umbral_neuronas_ocultas,precision,epocas,tasa_aprendizaje,neuronas_ocultas,numero_entradas,neurona_salida)
 Perceptro_Multi.Entrenar()
@@ -288,3 +289,4 @@ plt.show()
 
 #Gráfica de dispersión
 #Matriz de confusión
+'''

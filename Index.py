@@ -9,9 +9,14 @@ ventanaIndex.geometry("600x600")
 ventanaIndex.title("INICIO")
 
 def abrir():
-    ventanaIndex.withdraw()
-    m.ventanaMenu.deiconify()
-    m.entrenamientoClasificacion(variableDesicion.get())
+    if(variableDesicion.get()==0):
+        ventanaIndex.withdraw()
+        m.ventanaMenu.deiconify()
+        m.entrenamientoClasificacion(variableDesicion.get())
+    elif(variableDesicion.get()==1):
+        ventanaIndex.withdraw()
+        m.mostrarVentanaEntrenamiento()
+        m.obtenerClaseParaEntrenamiento(variableDesicion.get())
     
 etiqueta = tk.Label(ventanaIndex,text="HOLA MUNDO",bg="green")
 etiqueta.pack(fill=tk.X)
@@ -35,3 +40,4 @@ def esconderVentanaMenu(event):
 ventanaIndex.bind("Escape",esconderVentanaMenu)
 
 ventanaIndex.mainloop()
+

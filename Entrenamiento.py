@@ -5,7 +5,8 @@ from PIL import Image, ImageTk
 import numpy as np
 import json
 import os
-
+from Perceptron import PerceptronProfe
+from Multicapa import Multicapa
 ventanaEntrenamiento = tk.Tk()
 
 ventanaEntrenamiento.geometry("600x600")
@@ -14,6 +15,11 @@ ventanaEntrenamiento.withdraw()
 vector=[]
 ventanaMostrar =None
 
+p0 = PerceptronProfe(3)
+p1 = PerceptronProfe(3)
+p2= PerceptronProfe(3)
+p3= PerceptronProfe(3)
+p4= PerceptronProfe(3)
 
 def llamarEntrada():
     ventanaEntrenamiento.deiconify()
@@ -35,7 +41,8 @@ def actualizarVideo():
 
 def capturarArea(event):
     global ventanaMostrar
-    
+    global vector
+    global variableClasificar
     x,y = event.x, event.y
     area= []
     for ancho in range(x-3,x+4):# o sea que empiece en la posicion X -3 y avance hasta x+4
@@ -70,9 +77,14 @@ def capturarArea(event):
     promedioB =suma_b//totalPixeles    
 
     print(f"EL PROMEDIO QUE DA DE LOS COLORES ES :    R:   {promedioR}   G: {promedioG}  B: {promedioB}")
-
-    guardarDatosParaEntrenar(promedioR,promedioG,promedioB)
-
+    if(variableClasificar==0):
+        print(f'EL VECTOR CERO ES {variableClasificar} modo PRACTICA')
+        guardarDatosParaEntrenar(promedioR,promedioG,promedioB)
+    elif(variableClasificar==1):
+        print(f'EL VECTOR CERO ES {variableClasificar} modo clasificacion')
+        vectorNuevo=np.array([promedioR,promedioG,promedioB])
+        calcularColor(vectorNuevo)
+        
 # Inicializa la camara o la fuente de video
 cap = c.VideoCapture('http://192.168.18.9:4747/video')
 
@@ -105,6 +117,94 @@ def retrocederMenu(event):
     
 ventanaEntrenamiento.bind("<Escape>",retrocederMenu)
 
-def entrenarSacarPesos():
+def entrenarSacarPesos(event=None):
+    global p0,p1,p2,p3,p4
+    vector0R,vector0G,vector0B,vector1R,vector1G,vector1B,vector2R,vector2G,vector2B,vector3R,vector3G,vector3B,vector4R,vector4G,vector4B=([] for _ in range(15))
+    vClase0,vClase1,vClase2,vClase3,vClase4=([] for _ in range(5))
+    with open('Frutas.json','r') as archivo_json:
+        datosCargados=json.load(archivo_json)
+    for datos in datosCargados:
+        if(datos['Clase']==0):
+            vector0R.append(datos['R'])
+            vector0G.append(datos['G'])
+            vector0B.append(datos['B'])
+            vClase0.append(datos['Clase'])
+        elif(datos['Clase']==1):
+            vector1R.append(datos['R'])
+            vector1G.append(datos['G'])
+            vector1B.append(datos['B'])
+            vClase1.append(datos['Clase'])
+        elif(datos['Clase']==2):
+            vector2R.append(datos['R'])
+            vector2G.append(datos['G'])
+            vector2B.append(datos['B'])
+            vClase2.append(datos['Clase'])
+        elif(datos['Clase']==3):
+            vector3R.append(datos['R'])
+            vector3G.append(datos['G'])
+            vector3B.append(datos['B'])
+            vClase3.append(datos['Clase'])
+        elif(datos['Clase']==4):
+            vector4R.append(datos['R'])
+            vector4G.append(datos['G'])
+            vector4B.append(datos['B'])
+            vClase4.append(datos['Clase'])
+    vector0R=np.array(vector0R)
+    vector0G=np.array(vector0G)
+    vector0B=np.array(vector0B)
+    vector1R=np.array(vector1R)
+    vector1G=np.array(vector1G)
+    vector1B=np.array(vector1B)
+    vector2R=np.array(vector2R)
+    vector2G=np.array(vector2G)
+    vector2B=np.array(vector2B)
+    vector3R=np.array(vector3R)
+    vector3G=np.array(vector3G)
+    vector3B=np.array(vector3B)
+    vector4R=np.array(vector4R)
+    vector4G=np.array(vector4G)
+    vector4B=np.array(vector4B)
     
+    print(p0.peso1)
+    print(p0.peso2)
+    print(p0.peso3)
+    
+    p0.entrenador(vector0R,vector0G,vector0B,vClase0)
+    p1.entrenador(vector1R,vector1G,vector1B,vClase1)
+    p2.entrenador(vector2R,vector2G,vector2B,vClase2)
+    p3.entrenador(vector3R,vector3G,vector3B,vClase3)
+    p4.entrenador(vector4R,vector4G,vector4B,vClase4)
+    print(p0.peso1)
+    print(p0.peso2)
+    print(p0.peso3)
+
+
+arregloColor=[]
+clase=[]
+multicapa=Multicapa(arregloColor,clase)
+
+def entrenarPesosMultiCapa(event):
+     global arregloColor,clase,multicapa
+     with open('Frutas.json','r') as archivo_json:
+        datosCargados=json.load(archivo_json)
+        r=[datos['R'] for datos in datosCargados]
+        g=[datos['G'] for datos in datosCargados]
+        b=[datos['B'] for datos in datosCargados]
+        clase=[datos['Clase'] for datos in datosCargados]
+        #arregloColor=[r,g,b]
+        arregloColor=list(zip(r,g,b))
+        multicapa=Multicapa(arregloColor,clase)
+        multicapa.entrenar()
+
+def calcularColor(x):
+    resultado = multicapa.Probar(x)
+    print(f' EL RESULTADO ESSSSSS       {resultado} ')
+    
+ventanaEntrenamiento.bind("<space>",entrenarPesosMultiCapa)
+
+variableClasificar=None
+
+def obtenerClase(x):
+    global variableClasificar
+    variableClasificar=x
     

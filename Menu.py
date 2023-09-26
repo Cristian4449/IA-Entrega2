@@ -40,6 +40,12 @@ def retrocederInicio(event):
 
 ventanaMenu.bind("<Escape>",retrocederInicio)
 
+def obtenerClaseParaEntrenamiento(x):
+    e.obtenerClase(x)
+
 def mostrarVentana():
     ventanaMenu.deiconify()
     e.ventanaEntrenamiento.withdraw()
+    
+def mostrarVentanaEntrenamiento():
+    e.llamarEntrada()
