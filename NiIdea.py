@@ -152,6 +152,7 @@ class PerceptronMulticapa():
             arreglo_pesos_2_s.append(self.w2[0][1])
             arreglo_pesos_3_s.append(self.w2[0][2])
             arreglo_error_red.append(self.error_red)
+            print(f"MOSTRANDO EL ERROR CUADRATICO    {self.Error_cuadratico}         PRECISION     {self.precision}")
             # Si se alcanza potencial_activacion_ocultas mayor numero de epocas
             if self.epocas_usadas > self.epocas:
                 break 
@@ -194,7 +195,7 @@ class PerceptronMulticapa():
         # Error cuadratico medio
         self.Error_cuadratico = ((1/len(arreglo_clases)) * (sum(self.Error_actual)))
         self.error_red = (self.Error_cuadratico - self.Error_prev)
-'''
+
 #Inicializar Perceptron Multicapa
 Perceptro_Multi = PerceptronMulticapa(arreglo_entrenamiento,arreglo_clases,w_1,w_2,umbral_neurona_salida,umbral_neuronas_ocultas,precision,epocas,tasa_aprendizaje,neuronas_ocultas,numero_entradas,neurona_salida)
 Perceptro_Multi.Entrenar()
@@ -289,4 +290,3 @@ plt.show()
 
 #Gráfica de dispersión
 #Matriz de confusión
-'''

@@ -22,7 +22,7 @@ etiqueta = tk.Label(ventanaIndex,text="HOLA MUNDO",bg="green")
 etiqueta.pack(fill=tk.X)
 #command=lambda:saludo   permite sincronizar funciones.
 boton1=tk.Button(ventanaIndex, text="Practica",command=lambda:variableDesicion.set(0), width=15 ,height=5)
-boton1.place(x=270,y=150)
+boton1.place(x=270,y=150) 
 
 boton2=tk.Button(ventanaIndex, text="CLASIFICACION",command=lambda :variableDesicion.set(1), width=15 ,height=5)
 boton2.place(x=270,y=250)

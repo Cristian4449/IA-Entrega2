@@ -81,12 +81,18 @@ def capturarArea(event):
         print(f'EL VECTOR CERO ES {variableClasificar} modo PRACTICA')
         guardarDatosParaEntrenar(promedioR,promedioG,promedioB)
     elif(variableClasificar==1):
+        
         print(f'EL VECTOR CERO ES {variableClasificar} modo clasificacion')
-        vectorNuevo=np.array([promedioR,promedioG,promedioB])
-        calcularColor(vectorNuevo)
+        arreglo_prueba = np.array([[promedioR,promedioG,promedioB]])
+        
+        resultado = multicapa.Probar(arreglo_prueba)
+        print(f' EL RESULTADO ESSSSSS       {resultado} ')
+        print(np.round(resultado))
+        
+    
         
 # Inicializa la camara o la fuente de video
-cap = c.VideoCapture('http://192.168.18.9:4747/video')
+cap = c.VideoCapture('http://192.168.1.4:4747/video')
 
 
 etiquetaVideo= tk.Label(ventanaEntrenamiento)#papi se supone que ya saben como es un label
@@ -199,6 +205,7 @@ def entrenarPesosMultiCapa(event):
 def calcularColor(x):
     resultado = multicapa.Probar(x)
     print(f' EL RESULTADO ESSSSSS       {resultado} ')
+    print(np.round(resultado))
     
 ventanaEntrenamiento.bind("<space>",entrenarPesosMultiCapa)
 

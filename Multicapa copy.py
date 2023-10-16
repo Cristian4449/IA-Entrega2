@@ -5,14 +5,14 @@ class Multicapa():
     def __init__(self,datosEntrenamiento,datosClase):
         self.tasaAprendizaje=0.3
         self.precision =0.0000001
-        self.epocas=200
+        self.epocas=100
         
         self.numeroEntradas=3
         self.capasOculta=1
         self.neuronasOcultas=5
         self.neuronaSalida=1
         
-        self.umbralNeuronaSalida=np.random.rand()  #1.0
+        self.umbralNeuronaSalida=1.0
         self.umbralNeuronasOcultas=np.ones((self.neuronasOcultas,1),float)
         
         np.random.seed(0)
@@ -24,7 +24,7 @@ class Multicapa():
         
         #variables de inicializacion
         self.salidaEsperada=0 #Salida deseada en la iteracion actual
-        self.errorRed=10#Error total de la red en un conjunto de las iteracion # MODIFICADO
+        self.errorRed=1#Error total de la red en un conjunto de las iteracion
         self.errorCuadratico=0
         self.error_previo=0 # error anterior
         self.errores=[]
@@ -54,7 +54,7 @@ class Multicapa():
         for salida in range(len(x)):
             self.entradas=z[:,salida]
             self.Propagar()
-            respuesta[salida,:]=self.salidaObtenida*4
+            respuesta[salida,:]=self.salidaObtenida
         return respuesta.tolist()
     
     def Propagar(self):
@@ -70,6 +70,7 @@ class Multicapa():
         self.salidaObtenida=self.Sigmoide(self.Y)
         
     def backPropagation(self):
+        print("ENTRO A BACK PROPAGATION")
         #Para Saber si funciona XD
         self.errorReal=(self.salidaEsperada-self.salidaObtenida)
         #calcular salida
@@ -92,27 +93,21 @@ class Multicapa():
         self.errorCuadratico=((1/len(self.arregloClase))*(sum(self.errorActual)))
         self.errorRed=self.errorCuadratico-self.error_previo
     
-    
     def entrenar(self):
         print("entrenando...............")
         while(np.abs(self.errorRed)>self.precision):
             self.error_previo=self.errorCuadratico
             for i in range(len(self.arregloClase)):
                 self.entradas=self.arregloEntrenamiento[:,i]#Señales de entrada por ciclo
-                self.salidaEsperada=self.arregloClase[i]/4.0 
+                self.salidaEsperada=self.arregloClase[i]
                 self.Propagar()
                 self.backPropagation()
                 self.Propagar()
-                self.errorActual[i]=(0.25)*((self.salidaEsperada-self.salidaObtenida)**2)
-                print(f"SALIDA OBTENIDA     {self.salidaObtenida*4}   salida esperada      {self.salidaEsperada*4}")
+                self.errorActual[i]=(0.3333)*((self.salidaEsperada-self.salidaObtenida)**2)
+                print(f"SALIDA OBTENIDA     {self.salidaObtenida}   salida esperada      {self.salidaEsperada}")
             self.Error()
             self.epocasUsadas +=1
-            print(f" AA VERRRR ERROR CUADRATICO     {self.errorCuadratico}                 PRESICION     {self.precision}" )
-           
             if self.epocasUsadas>self.epocas:
-                print("NO SE LOGRO NI MRD")
-                break
-            elif (self.errorCuadratico <self.precision):
-                print(" FUNCIONó")
                 break
         print("entrenado")
+    
