@@ -3,9 +3,9 @@ import numpy as np
 class Multicapa():
 
     def __init__(self,datosEntrenamiento,datosClase):
-        self.tasaAprendizaje=0.3
+        self.tasaAprendizaje=0.1
         self.precision =0.0000001
-        self.epocas=200
+        self.epocas=1000
         
         self.numeroEntradas=3
         self.capasOculta=1
@@ -16,15 +16,20 @@ class Multicapa():
         self.umbralNeuronasOcultas=np.ones((self.neuronasOcultas,1),float)
         
         np.random.seed(0)
+        #self.peso_1=np.random.rand(self.neuronasOcultas,self.numeroEntradas)
+        
         self.peso_1=np.random.rand(self.neuronasOcultas,self.numeroEntradas)
-        self.peso_2=np.random.rand(self.neuronaSalida,self.neuronasOcultas)
+        #self.peso_2=np.random.rand(self.neuronaSalida,self.neuronasOcultas)
+        self.peso_1 = np.random.randn(self.neuronasOcultas, self.numeroEntradas)
+        self.peso_2 = np.random.randn(self.neuronaSalida, self.neuronasOcultas)
+
         
         self.arregloEntrenamiento=np.transpose(datosEntrenamiento)
         self.arregloClase=datosClase
         
         #variables de inicializacion
         self.salidaEsperada=0 #Salida deseada en la iteracion actual
-        self.errorRed=10#Error total de la red en un conjunto de las iteracion # MODIFICADO
+        self.errorRed=1#Error total de la red en un conjunto de las iteracion # MODIFICADO
         self.errorCuadratico=0
         self.error_previo=0 # error anterior
         self.errores=[]
@@ -99,7 +104,7 @@ class Multicapa():
             self.error_previo=self.errorCuadratico
             for i in range(len(self.arregloClase)):
                 self.entradas=self.arregloEntrenamiento[:,i]#Señales de entrada por ciclo
-                self.salidaEsperada=self.arregloClase[i]/4.0 
+                self.salidaEsperada=self.arregloClase[i]/4
                 self.Propagar()
                 self.backPropagation()
                 self.Propagar()
