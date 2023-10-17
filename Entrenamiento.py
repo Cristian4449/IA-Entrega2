@@ -7,6 +7,8 @@ import json
 import os
 from Perceptron import PerceptronProfe
 from Multicapa import Multicapa
+from sklearn.preprocessing import OneHotEncoder
+
 ventanaEntrenamiento = tk.Tk()
 
 ventanaEntrenamiento.geometry("600x600")
@@ -77,6 +79,7 @@ def capturarArea(event):
     promedioB =suma_b//totalPixeles    
 
     print(f"EL PROMEDIO QUE DA DE LOS COLORES ES :    R:   {promedioR}   G: {promedioG}  B: {promedioB}")
+    print(f"VARIABLE CLASIFICAR ES {variableClasificar}")
     if(variableClasificar==0):
         print(f'EL VECTOR CERO ES {variableClasificar} modo PRACTICA')
         guardarDatosParaEntrenar(promedioR,promedioG,promedioB)
@@ -199,6 +202,8 @@ def entrenarPesosMultiCapa(event):
         clase=[datos['Clase'] for datos in datosCargados]
         #arregloColor=[r,g,b]
         arregloColor=list(zip(r,g,b))
+        encoder = OneHotEncoder(sparse=False)
+        etiquetas_one_hot = encoder.fit_transform(np.array(clase).reshape(-1, 1))
         multicapa=Multicapa(arregloColor,clase)
         multicapa.entrenar()
 

@@ -12,6 +12,7 @@ def abrir():
     if(variableDesicion.get()==0):
         ventanaIndex.withdraw()
         m.ventanaMenu.deiconify()
+        m.obtenerClaseParaEntrenamiento(variableDesicion.get())
         m.entrenamientoClasificacion(variableDesicion.get())
     elif(variableDesicion.get()==1):
         ventanaIndex.withdraw()
