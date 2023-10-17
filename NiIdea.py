@@ -36,7 +36,7 @@ arreglo_entrenamiento=np.array([
     [70, 55, 15],
     [85, 45, 12],
     [75, 52, 18]])/255
-arreglo_clases = np.array([1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+arreglo_clases = np.array([1,1,2,3,4,1,1,1,2,2,3,3,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
 
 #arreglo_entrenamiento=np.array([[1,1,0],[1,1,1],[0,0,1],[0,0,0],[0,1,0],[1,0,0]])
 #arreglo_clases=[1,1,1,0,0,0]
@@ -62,7 +62,7 @@ arreglo_error_red = []
 # Arquitectura de la red
 numero_entradas = 3 # numero de entradas
 cap_ocultas = 1 # Una capa oculta
-neuronas_ocultas = 3 # Neuronas en la capa oculta
+neuronas_ocultas = 5 # Neuronas en la capa oculta
 neurona_salida = 1 # Neuronas en la capa de salida
 # Valor de umbral o bia
 umbral_neurona_salida = 1.0 # umbral en neurona de salida
