@@ -79,7 +79,8 @@ class Multicapa():
             self.potencialActivacionOcultas[i,:]=np.dot(self.peso_1[i,:],self.entradas.T)+self.umbralNeuronasOcultas[i,:]
         
         for j in range(self.neuronasOcultas):
-            self.funcionActivacionOculta[j,:]=self.Sigmoide(self.potencialActivacionOcultas[j,:])
+            #self.funcionActivacionOculta[j,:]=self.Sigmoide(self.potencialActivacionOcultas[j,:])
+            self.funcionActivacionOculta[j,:]=self.Softmax(self.potencialActivacionOcultas[j,:])
         
         #Calcula el potencial para la neurona de salida
         self.Y = np.dot(self.peso_2, self.funcionActivacionOculta) + self.umbralNeuronaSalida
