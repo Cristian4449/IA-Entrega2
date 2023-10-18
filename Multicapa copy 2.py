@@ -19,7 +19,7 @@ class Multicapa():
         np.random.seed(0)
         self.peso_1=np.random.rand(self.neuronasOcultas,self.numeroEntradas)
         #self.peso_2=np.random.rand(self.neuronaSalida,self.neuronasOcultas)
-        self.peso_2 = np.random.rand(5,3)
+        self.peso_2 = np.random.rand(self.neuronaSalida, self.neuronasOcultas)
 
         self.arregloEntrenamiento=np.transpose(datosEntrenamiento)
         self.arregloClase=datosClase
@@ -42,11 +42,10 @@ class Multicapa():
         
         #Variables de retropropagacion
         self.errorReal=0
-        self.deltaSalida = np.zeros((self.neuronaSalida, 1))
-
+        
         #self.deltaSalida=0.0
         
-        #self.deltaSalida=np.zeros((5,1))
+        self.deltaSalida=np.zeros((5,1))
         
         self.deltaNeuronasOcultas=np.zeros((self.neuronasOcultas,1))#Deltas en neuronas ocultas
     
@@ -73,6 +72,20 @@ class Multicapa():
         exp_x = np.exp(x - np.max(x))  # Resta el máximo valor para mejorar la estabilidad numérica
         return exp_x / exp_x.sum(axis=0)
 
+
+    '''
+    def Propagar(self):
+        #esta es la funcion de activacion de las primeras capas es lo mismo en el perceptron peso*entrada+Bias
+        for i in range(self.neuronasOcultas):
+            self.potencialActivacionOcultas[i,:]=np.dot(self.peso_1[i,:],self.entradas.T)+self.umbralNeuronasOcultas[i,:]
+        
+        for j in range(self.neuronasOcultas):
+            self.funcionActivacionOculta[j,:]=self.Sigmoide(self.potencialActivacionOcultas[j,:])
+        
+        #Calcula el potencial para la neurona de salida
+        self.Y=(np.dot(self.peso_2,self.funcionActivacionOculta)+self.umbralNeuronaSalida)
+        self.salidaObtenida=self.Sigmoide(self.Y)
+    '''
     def Propagar(self):
         #esta es la funcion de activacion de las primeras capas es lo mismo en el perceptron peso*entrada+Bias
         for i in range(self.neuronasOcultas):
@@ -84,19 +97,34 @@ class Multicapa():
         #Calcula el potencial para la neurona de salida
         self.Y = np.dot(self.peso_2, self.funcionActivacionOculta) + self.umbralNeuronaSalida
         self.salidaObtenida = self.Softmax(self.Y)
-        print("SALIENDO DE PROPAGAR")
         
     def backPropagation(self):
-        print("ENTRO A BACK PROPAGATION")     
+        print("ENTRO A BACK PROPAGATION")
+        #Para Saber si funciona XD
+        #self.errorReal=(self.salidaEsperada-self.salidaObtenida)
         
-        print(f"A VER DIMENSIONES    \n PESO 2{self.peso_2.shape} \n DELTA SALIDA {self.deltaSalida.shape}  \n ACTIVACION{self.funcionActivacionOculta.shape}")
         self.errorReal = self.salidaEsperada - self.salidaObtenida
-        print(f"SELFFFFF Y     \n{self.Y}     y   SELF ERRORREAL   \n{self.errorReal}")
-        self.deltaSalida =  -self.errorReal
         
-        print(f"A VER DIMENSIONES 333333   \n PESO 2{self.peso_2.shape} \n DELTA SALIDA {self.deltaSalida.shape}  \n ACTIVACION{self.funcionActivacionOculta.shape}")
+        #calcular salida
+        #self.deltaSalida=(self.derivadaSigmoide(self.Y)*self.errorReal)
         
-        self.peso_2 = self.peso_2 + np.dot(self.deltaSalida, self.funcionActivacionOculta) * self.tasaAprendizaje
+        self.deltaSalida = self.errorReal * self.derivadaSigmoide(self.Y)
+       
+       
+        #self.peso_2 = self.peso_2 + (np.outer(self.deltaSalida, self.funcionActivacionOculta.T) * self.tasaAprendizaje)
+
+        self.peso_2 = self.peso_2 + np.dot(self.deltaSalida.T, self.funcionActivacionOculta) * self.tasaAprendizaje
+        
+       
+       
+       
+        #self.peso_2 = self.peso_2 + (np.outer(self.deltaSalida, self.funcionActivacionOculta) * self.tasaAprendizaje)
+       
+        #ajustar peso2  o  sea el peso de la neurona salida no es tan dificil bobos hptas
+        #self.peso_2=self.peso_2 +(np.transpose(self.funcionActivacionOculta)*self.tasaAprendizaje*self.deltaSalida)
+       
+       
+       
        
         #ajuste del umbral de salida o sea de la neurona final pap
         self.umbralNeuronaSalida=self.umbralNeuronaSalida + (self.tasaAprendizaje *self.deltaSalida)
@@ -112,6 +140,33 @@ class Multicapa():
         for i in range(self.neuronasOcultas):
             self.umbralNeuronasOcultas[i,:]=self.umbralNeuronasOcultas[i,:]+(self.tasaAprendizaje*self.deltaNeuronasOcultas[i,:])
     
+    '''
+    def backPropagation(self):
+    # Calcular la diferencia entre la salida esperada y la salida obtenida
+        self.errorReal = self.salidaEsperada - self.salidaObtenida
+
+    # Calcular la delta de la salida
+        delta_salida = self.errorReal * self.derivadaSigmoide(self.Y)
+
+    # Actualizar los pesos de la capa de salida
+        self.peso_2 += np.outer(delta_salida, self.funcionActivacionOculta) * self.tasaAprendizaje
+
+    # Actualizar los umbrales de la capa de salida
+        self.umbralNeuronaSalida += delta_salida * self.tasaAprendizaje
+
+    # Calcular la delta de las neuronas ocultas
+        delta_ocultas = np.dot(self.peso_2.T, delta_salida) * self.derivadaSigmoide(self.potencialActivacionOcultas)
+
+    # Actualizar los pesos de la capa oculta
+        self.peso_1 += np.outer(delta_ocultas, self.entradas) * self.tasaAprendizaje
+
+    # Actualizar los umbrales de la capa oculta
+        self.umbralNeuronasOcultas += delta_ocultas * self.tasaAprendizaje
+
+    def Error(self):
+        self.errorCuadratico=((1/len(self.arregloClase))*(sum(self.errorActual)))
+        self.errorRed=self.errorCuadratico-self.error_previo
+    '''
     
     def entrenar(self):
         print("entrenando...............")

@@ -95,7 +95,7 @@ def capturarArea(event):
     
         
 # Inicializa la camara o la fuente de video
-cap = c.VideoCapture('http://192.168.1.4:4747/video')
+cap = c.VideoCapture('http://192.168.1.3:4747/video')
 
 
 etiquetaVideo= tk.Label(ventanaEntrenamiento)#papi se supone que ya saben como es un label
