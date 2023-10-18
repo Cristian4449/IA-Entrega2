@@ -202,9 +202,9 @@ def entrenarPesosMultiCapa(event):
         clase=[datos['Clase'] for datos in datosCargados]
         #arregloColor=[r,g,b]
         arregloColor=list(zip(r,g,b))
-        encoder = OneHotEncoder(sparse=False)
+        encoder = OneHotEncoder(sparse=False, categories='auto')
         etiquetas_one_hot = encoder.fit_transform(np.array(clase).reshape(-1, 1))
-        multicapa=Multicapa(arregloColor,clase)
+        multicapa=Multicapa(arregloColor,etiquetas_one_hot)
         multicapa.entrenar()
 
 def calcularColor(x):

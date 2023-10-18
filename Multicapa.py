@@ -12,8 +12,9 @@ class Multicapa():
         self.neuronasOcultas=3
         self.neuronaSalida=5
         
-        self.umbralNeuronaSalida=1.0
-        self.umbralNeuronasOcultas=np.ones((self.neuronasOcultas,1),float)
+        self.umbralNeuronaSalida=np.ones((self.neuronaSalida,1)dtype=float)
+        
+        self.umbralNeuronasOcultas=np.ones((self.neuronasOcultas,1),dtype=float)
         
         np.random.seed(0)
         self.peso_1=np.random.rand(self.neuronasOcultas,self.numeroEntradas)
@@ -57,6 +58,15 @@ class Multicapa():
             respuesta[salida,:]=self.salidaObtenida
         return respuesta.tolist()
     
+    
+    
+    
+    def Softmax(self, x):
+        exp_x = np.exp(x - np.max(x))  # Resta el máximo valor para mejorar la estabilidad numérica
+        return exp_x / exp_x.sum(axis=0)
+
+
+    '''
     def Propagar(self):
         #esta es la funcion de activacion de las primeras capas es lo mismo en el perceptron peso*entrada+Bias
         for i in range(self.neuronasOcultas):
@@ -68,6 +78,18 @@ class Multicapa():
         #Calcula el potencial para la neurona de salida
         self.Y=(np.dot(self.peso_2,self.funcionActivacionOculta)+self.umbralNeuronaSalida)
         self.salidaObtenida=self.Sigmoide(self.Y)
+    '''
+    def Propagar(self):
+        #esta es la funcion de activacion de las primeras capas es lo mismo en el perceptron peso*entrada+Bias
+        for i in range(self.neuronasOcultas):
+            self.potencialActivacionOcultas[i,:]=np.dot(self.peso_1[i,:],self.entradas.T)+self.umbralNeuronasOcultas[i,:]
+        
+        for j in range(self.neuronasOcultas):
+            self.funcionActivacionOculta[j,:]=self.Sigmoide(self.potencialActivacionOcultas[j,:])
+        
+        #Calcula el potencial para la neurona de salida
+        self.Y = np.dot(self.peso_2, self.funcionActivacionOculta) + self.umbralNeuronaSalida
+        self.salidaObtenida = self.Softmax(self.Y)
         
     def backPropagation(self):
         print("ENTRO A BACK PROPAGATION")
