@@ -2,7 +2,7 @@ import numpy as np
 import json
 from sklearn.preprocessing import OneHotEncoder
 
-class Multicapa():
+class Multicapaprueba():
 
     def __init__(self, datosEntrenamiento):
         self.tasa_aprendizaje =0.01
@@ -72,18 +72,3 @@ class Multicapa():
         
         print(f'la prediccion es {self.prediccion}')
 
-arregloColor=[]
-with open('Frutas.json','r') as archivo_json:
-    datosCargados=json.load(archivo_json)
-    r=[datos['R'] for datos in datosCargados]
-    g=[datos['G'] for datos in datosCargados]
-    b=[datos['B'] for datos in datosCargados]
-    clase=[datos['Clase'] for datos in datosCargados]
-    #arregloColor.append([r,g,b])
-    #arregloColor=list(zip(r,g,b))
-    arregloColor=np.array([r,g,b])
-    encoder = OneHotEncoder(sparse=False, categories='auto')
-    etiquetas_one_hot = encoder.fit_transform(np.array(clase).reshape(-1, 1))
-    multicapa=Multicapa(arregloColor)
-    print(arregloColor)
-    multicapa.entrenamiento()

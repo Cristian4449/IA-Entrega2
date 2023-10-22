@@ -13,7 +13,7 @@ ventanaEntrenamiento = tk.Tk()
 
 ventanaEntrenamiento.geometry("600x600")
 ventanaEntrenamiento.withdraw()
-
+vectorClase=[]
 vector=[]
 ventanaMostrar =None
 
@@ -22,7 +22,7 @@ p1 = PerceptronProfe(3)
 p2= PerceptronProfe(3)
 p3= PerceptronProfe(3)
 p4= PerceptronProfe(3)
-
+data_input=[]
 def llamarEntrada():
     ventanaEntrenamiento.deiconify()
 
@@ -42,6 +42,8 @@ def actualizarVideo():
         etiquetaVideo.after(10,actualizarVideo)#cada 0.01 segundos se actualiza el video o el label
 
 def capturarArea(event):
+    global data_input
+    global vectorClase
     global ventanaMostrar
     global vector
     global variableClasificar
@@ -57,41 +59,55 @@ def capturarArea(event):
             except IndexError:
                 fila.append((255,255,255))#pos si se sale de la imagen recoja datos en blanco pero es imposible aparentementeeeeeeeeeeee
         area.append(fila)# aqui la lista fila se agrega a la lista area
+    '''
     suma_r=0
     suma_g=0
     suma_b=0
-    '''
+    
+    
     for fila in area:
        print(fila)#para mostrar los datos 
     '''
+    suma_r=[]
+    suma_g=[]
+    suma_b=[]
     for fila in area:
         for r,g,b in fila:
-            suma_r+=r
-            suma_g+=g
-            suma_b+=b
+            suma_r.append(r/255.0)
+            suma_g.append(g/255.0)
+            suma_b.append(b/255.0)
             
 
     totalPixeles= 49
+    suma_r=np.array(suma_r)
+    suma_g=np.array(suma_g)
+    suma_b=np.array(suma_b)
     
-   
-    promedioR =suma_r//totalPixeles    
-    promedioG =suma_g//totalPixeles    
-    promedioB =suma_b//totalPixeles    
+    promedioR=np.mean(suma_r)    
+    promedioG=np.mean(suma_g)    
+    promedioB=np.mean(suma_b)    
+    vectorClase
 
     print(f"EL PROMEDIO QUE DA DE LOS COLORES ES :    R:   {promedioR}   G: {promedioG}  B: {promedioB}")
     print(f"VARIABLE CLASIFICAR ES {variableClasificar}")
     if(variableClasificar==0):
         print(f'EL VECTOR CERO ES {variableClasificar} modo PRACTICA')
-        guardarDatosParaEntrenar(promedioR,promedioG,promedioB)
+       
+       
+        #guardarDatosParaEntrenar(promedioR,promedioG,promedioB)
+    
+        data_input.append([promedioR,promedioG,promedioB])
+        vectorClase.append(vector[1])
+    
     elif(variableClasificar==1):
-        
+        '''
         print(f'EL VECTOR CERO ES {variableClasificar} modo clasificacion')
         arreglo_prueba = np.array([[promedioR,promedioG,promedioB]])
         
-        resultado = multicapa.Probar(arreglo_prueba)
+        #resultado = multicapa.Probar(arreglo_prueba)
         print(f' EL RESULTADO ESSSSSS       {resultado} ')
         print(np.round(resultado))
-        
+        '''
     
         
 # Inicializa la camara o la fuente de video
@@ -188,6 +204,7 @@ def entrenarSacarPesos(event=None):
     print(p0.peso3)
 
 
+'''
 arregloColor=[]
 clase=[]
 multicapa=Multicapa(arregloColor,clase)
@@ -206,13 +223,23 @@ def entrenarPesosMultiCapa(event):
         etiquetas_one_hot = encoder.fit_transform(np.array(clase).reshape(-1, 1))
         multicapa=Multicapa(arregloColor,etiquetas_one_hot)
         multicapa.entrenar()
-
+'''
+def entrenar(event):
+    global data_input,vectorClase
+    arregloColor =data_input
+    encoder = OneHotEncoder(sparse=False, categories='auto')
+    etiquetas_one_hot = encoder.fit_transform(np.array(vectorClase).reshape(-1, 1))
+    multicapa=Multicapa(arregloColor,etiquetas_one_hot)
+    multicapaObjeto = Multicapa(data_input,etiquetas_one_hot)
+    multicapaObjeto.entrenar()
+'''
 def calcularColor(x):
     resultado = multicapa.Probar(x)
     print(f' EL RESULTADO ESSSSSS       {resultado} ')
     print(np.round(resultado))
-    
-ventanaEntrenamiento.bind("<space>",entrenarPesosMultiCapa)
+'''    
+#ventanaEntrenamiento.bind("<space>",entrenarPesosMultiCapa)
+ventanaEntrenamiento.bind("<space>",entrenar)
 
 variableClasificar=None
 
