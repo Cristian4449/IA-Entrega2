@@ -3,9 +3,9 @@ import numpy as np
 class MulticapaFinal:
     
     def __init__(self,datosEntrenamiento,datosClase):
-        self.tasaAprendizaje=0.1
+        self.tasaAprendizaje=0.3
         self.precision =0.0000001
-        self.epocas=3000
+        self.epocas=1000
         
         self.numeroEntradas=3
         self.capasOculta=1
@@ -26,10 +26,7 @@ class MulticapaFinal:
         self.arregloClase=datosClase
         
         #variables de inicializacion
-        self.salidaEsperada=0 #Salida deseada en la iteracion actual
-        self.errorRed=1#Error total de la red en un conjunto de las iteracion
         self.errorCuadratico=0
-        self.error_previo=0 # error anterior
         self.errores=[]
         self.errorActual=np.zeros((len(self.arregloClase)))
         self.entradas=np.zeros((1,self.numeroEntradas))
@@ -40,21 +37,13 @@ class MulticapaFinal:
        
         self.potencialActivacionSalidas=np.zeros((5,1))
         
-        #self.potencialActivacionSalidas=np.zeros((self.neuronaSalida,1))
-
         self.Y=np.zeros((5,1))#Potencial de activacion en la neurona de la salida
         self.salidaObtenida=0.0#Funcion de Activacion en neurona de salida
         self.epocasUsadas=0
         
         #Variables de retropropagacion
-        self.errorReal=0
         self.deltaSalida = np.zeros((5, 1))
     
-
-        #self.deltaSalida=0.0
-        
-        #self.deltaSalida=np.zeros((5,1))
-        
         self.deltaNeuronasOcultas=np.zeros((self.neuronasOcultas,1))#Deltas en neuronas ocultas
     
     def sigmoid(self,x):
@@ -62,7 +51,10 @@ class MulticapaFinal:
 
     def sigmoid_derivative(self,x):
         return x * (1 - x)
-
+    
+    def softmax(self,x):
+        valor_exponentes = np.exp(x - np.max(x))
+        return valor_exponentes / np.sum(valor_exponentes, axis=1, keepdims=True)
     def propagacion(self,entradas):
         #Capa oculta
         self.potencialActivacionOcultas =np.dot(entradas,self.pesoOcultas)+self.umbralNeuronasOcultas
@@ -71,9 +63,10 @@ class MulticapaFinal:
         self.potencialActivacionSalidas = np.matmul(self.funcionActivacionOculta, self.pesoSalidas.T) + self.umbralNeuronaSalida
         self.potencialSalida = self.potencialActivacionSalidas[0:1,:]
         
-        self.Y =self.sigmoid(self.potencialSalida)
+        self.Y =self.softmax(self.potencialSalida)
         self.capSalida =self.Y 
         return self.Y
+    
     
     def retropropagacion(self,entradargb,salidaDeseada):
         
@@ -109,7 +102,6 @@ class MulticapaFinal:
                 salida_calculada =self.propagacion(entrada)
                 #calcular el error
                 error =0.333*(self.arregloClase[i]-salida_calculada)
-                print(f"  SALIDA ESPERADA {self.arregloClase[i]}    SALIDA OBTENIDA {salida_calculada}")
                 error_total +=np.sum(error**2)
                 
                 #hacemos retropagacion
@@ -120,15 +112,65 @@ class MulticapaFinal:
             #registrar error para esta epoca
             self.errores.append(self.errorCuadratico)
             # Comprobar si se cumple la condición de parada
+            print(self.errorCuadratico)
             if self.errorCuadratico < self.precision:
                 print(f"Entrenamiento completado en la época {epoca}. Error: {self.errorCuadratico}")
                 break
 
+    def clasificar(self, nueva_entrada):
+    # Realiza la propagación hacia adelante para clasificar la nueva entrada
+        salida_calculada = self.propagacion(nueva_entrada)
+    
+    # Puedes retornar la salida calculada que representa la clasificación
+        return salida_calculada
 
+
+
+#NO ELIMINAR 
+'''
 # Proporcionar los datos de entrenamiento y las clases
-datos_entrenamiento = np.array([[1, 0, 1], [1, 1, 0],[0,1,1],[1,1,1],[0,0,0]])  # Agrega más ejemplos de entrenamiento
+datos_entrenamiento = np.array([[1, 0, 1], [1, 1, 0],[0,1,1],[1,1,1],[0,0,0],[0,0,0]
+                                ,[0,0,1],[1,1,1],[1,1,1],[0,1,1],[1,1,1],[0,0,0]
+                                ,[0,0,0],[0,0,1],[1,1,1],[1,1,1],[0,0,0],[1,1,1]
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]  # Agrega más ejemplos de entrenamiento
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]
+                                ,[0,1,1],[1,1,1],[0,0,0],[0,0,1],[1,1,1],[1,1,1]])
+                                
+
 #clases = np.array([0, 1, 2,3,4])  # Agrega las clases correspondientes
-clases = np.array([[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1]])
+clases = np.array([[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1]
+                   ,[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1]
+                   ,[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1]
+                   ,[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1]
+                   ,[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1]
+                   ,[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1]
+                   ,[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1]
+                   ,[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1]
+                   ,[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1]
+                   ,[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1]
+                   ,[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1]
+                   ,[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1]
+                   ,[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1]
+                   ,[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0,0,1,0,0],[0,1,0,0,0]
+                   ,[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1],[0, 0, 0, 0, 1]])
+
+
+
+
 matrices_rgb = [dato.reshape(3, 1) for dato in datos_entrenamiento]
 
 
@@ -139,19 +181,8 @@ red_neuronal = MulticapaFinal(datos_entrenamiento, clases)
 entrada_ejemplo = np.array([0, 0, 0])
 
 red_neuronal.entrenar()
-# Imprimir los nuevos valores de pesos y umbrales
-print("Nuevos pesos de salida:", red_neuronal.pesoSalidas)
-print("Nuevos umbrales de salida:", red_neuronal.umbralNeuronaSalida)
-print("Nuevos pesos de capa oculta:", red_neuronal.pesoOcultas)
-print("Nuevos umbrales de capa oculta:", red_neuronal.umbralNeuronasOcultas)
 
-
-entrada_prueba = np.array([0, 0, 0],)
-salida_calculada = red_neuronal.propagacion(entrada_prueba)
-
-clase_predicha = np.argmax(salida_calculada)
-clase_real = 2  # La clase real correspondiente a la entrada de prueba
-if clase_predicha == clase_real:
-    print("La red neuronal ha clasificado correctamente la entrada.")
-else:
-    print(f"La red neuronal ha clasificado incorrectamente. Clase predicha: {clase_predicha}")
+    
+print(datos_entrenamiento.shape)
+print(clases.shape)
+'''
