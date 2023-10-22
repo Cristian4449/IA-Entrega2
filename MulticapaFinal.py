@@ -76,8 +76,6 @@ class MulticapaFinal:
 
         self.deltaSalida = (calcularErrorSalida * self.sigmoid_derivative(self.Y))
 
-
-        
         #propagar los deltas hacia atras
         error_ocultas =self.deltaSalida.dot(self.pesoSalidas)
         self.deltaNeuronasOcultas=error_ocultas* self.sigmoid_derivative(self.funcionActivacionOculta)
