@@ -90,7 +90,20 @@ def capturarArea(event):
         arregloClasificacion =np.array([[promedioR,promedioG,promedioB]])
         
         resultado= multicapa.clasificar(arregloClasificacion)
-        print(f"{resultado}   EL RESULTADO ESSSSSS     {np.argmax(resultado)}")
+        if(np.argmax(resultado) == 0):
+            nombre = "papa"
+        elif(np.argmax(resultado) == 1):
+            nombre = "uva"
+        elif(np.argmax(resultado) == 2):
+            nombre = "limón"
+        elif(np.argmax(resultado) == 3):
+            nombre = "Fruta x1"
+        elif(np.argmax(resultado) == 4):
+            nombre = "Fruta x2"
+        
+        
+        print(f"{resultado}   EL RESULTADO ESSSSSS     {nombre}")
+        
         #entrada = np.argmax(resultado)
         #ser.write(str(entrada).encode())
         

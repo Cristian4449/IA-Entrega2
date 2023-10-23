@@ -6,7 +6,7 @@ class MulticapaFinal:
     def __init__(self,datosEntrenamiento,datosClase):
         self.tasaAprendizaje=0.3
         self.precision =0.0000001
-        self.epocas=10
+        self.epocas=250
         
         self.numeroEntradas=3
         self.capasOculta=1
