@@ -9,11 +9,11 @@ ventanaMenu.geometry("600x600")
 variableClasificacion=None
 
 valorFruta = tk.IntVar()
-papa = tk.Button(ventanaMenu, text="amarillo", width=20, height=5,command=lambda : valorFruta.set(0))
-uva = tk.Button(ventanaMenu, text="azul", width=20, height=5,command=lambda : valorFruta.set(1))
-limon = tk.Button(ventanaMenu, text="rojo", width=20, height=5,command=lambda : valorFruta.set(2))
-frutaMaestro=tk.Button(ventanaMenu,text="verde",width=20,height=5,command=lambda:valorFruta.set(3))
-frutaMaestro2=tk.Button(ventanaMenu,text="fucsia",width=20,height=5,command=lambda:valorFruta.set(4))
+papa = tk.Button(ventanaMenu, text="Papa", width=20, height=5,command=lambda : valorFruta.set(0))
+uva = tk.Button(ventanaMenu, text="Uva", width=20, height=5,command=lambda : valorFruta.set(1))
+limon = tk.Button(ventanaMenu, text="Limon", width=20, height=5,command=lambda : valorFruta.set(2))
+frutaMaestro=tk.Button(ventanaMenu,text="Fruta x1",width=20,height=5,command=lambda:valorFruta.set(3))
+frutaMaestro2=tk.Button(ventanaMenu,text="Fruta x2",width=20,height=5,command=lambda:valorFruta.set(4))
 
 def caso():
     ventanaMenu.withdraw()

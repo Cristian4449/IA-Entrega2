@@ -10,8 +10,8 @@ import serial
 from time import sleep
 
 #Inicializamos el puerto de serie a 9600 baud
-ser = serial.Serial('COM5', 9600)
-sleep(5)
+#ser = serial.Serial('COM5', 9600)
+#sleep(5)
 
 ventanaEntrenamiento = tk.Tk()
 
@@ -32,6 +32,7 @@ def actualizarVideo():
     if confirmarCaptura:
         #tenemos que convertir el frame de OpenCV de BGR A RGB, para que sea compatible con nuestros datos.
         ventanaMostrar=c.cvtColor(ventanaMostrar,c.COLOR_BGR2RGB)
+        ventanaMostrar=c.rotate(ventanaMostrar,c.ROTATE_90_CLOCKWISE)
         ventanaMostrar=c.resize(ventanaMostrar,(600,600))
         #lo que hacemos aqui es para que el frame de openCV se adapte ala ventan tkinter
         foto=ImageTk.PhotoImage(image=Image.fromarray(ventanaMostrar))
@@ -90,11 +91,11 @@ def capturarArea(event):
         
         resultado= multicapa.clasificar(arregloClasificacion)
         print(f"{resultado}   EL RESULTADO ESSSSSS     {np.argmax(resultado)}")
-        entrada = np.argmax(resultado)
-        ser.write(str(entrada).encode())
+        #entrada = np.argmax(resultado)
+        #ser.write(str(entrada).encode())
         
 # Inicializa la camara o la fuente de video
-cap = c.VideoCapture('http://192.168.1.3:4747/video')
+cap = c.VideoCapture('http://192.168.100.20:4747/video')
 
 
 etiquetaVideo= tk.Label(ventanaEntrenamiento)#papi se supone que ya saben como es un label
@@ -143,7 +144,7 @@ def entrenarPesosMultiCapa(event):
         clase=[datos['Clase'] for datos in datosCargados]
 
     for valorR,valorG,valorB,numero in zip(r,g,b,clase):
-        arregloColor.append([valorR,valorG,valorG])
+        arregloColor.append([valorR,valorG,valorB])
         if numero==0:
             claseArreglo.append([1,0,0,0,0])
         elif numero==1:
@@ -157,7 +158,7 @@ def entrenarPesosMultiCapa(event):
             
     arregloColor = np.array(arregloColor)
     claseArreglo=np.array(claseArreglo)
-          
+    
     multicapa=MulticapaFinal(arregloColor,claseArreglo)
     multicapa.entrenar()
 
