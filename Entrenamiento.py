@@ -6,7 +6,12 @@ import numpy as np
 import json
 import os
 from MulticapaFinal import MulticapaFinal
+import serial
+from time import sleep
 
+#Inicializamos el puerto de serie a 9600 baud
+ser = serial.Serial('COM5', 9600)
+sleep(5)
 
 ventanaEntrenamiento = tk.Tk()
 
@@ -83,11 +88,10 @@ def capturarArea(event):
         print(f"BUENO ENTRANDO A CLASIFICACION")
         arregloClasificacion =np.array([[promedioR,promedioG,promedioB]])
         
-        
-        
         resultado= multicapa.clasificar(arregloClasificacion)
         print(f"{resultado}   EL RESULTADO ESSSSSS     {np.argmax(resultado)}")
-    
+        entrada = np.argmax(resultado)
+        ser.write(str(entrada).encode())
         
 # Inicializa la camara o la fuente de video
 cap = c.VideoCapture('http://192.168.1.3:4747/video')
