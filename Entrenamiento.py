@@ -10,8 +10,8 @@ import serial
 from time import sleep
 
 #Inicializamos el puerto de serie a 9600 baud
-#ser = serial.Serial('COM5', 9600)
-#sleep(5)
+ser = serial.Serial('COM5', 9600)
+sleep(5)
 
 ventanaEntrenamiento = tk.Tk()
 
@@ -104,8 +104,8 @@ def capturarArea(event):
         
         print(f"{resultado}   EL RESULTADO ESSSSSS     {nombre}")
         
-        #entrada = np.argmax(resultado)
-        #ser.write(str(entrada).encode())
+        entrada = np.argmax(resultado)
+        ser.write(str(entrada).encode())
         
 # Inicializa la camara o la fuente de video
 cap = c.VideoCapture('http://192.168.100.20:4747/video')
