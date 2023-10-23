@@ -6,7 +6,7 @@ class MulticapaFinal:
     def __init__(self,datosEntrenamiento,datosClase):
         self.tasaAprendizaje=0.3
         self.precision =0.0000001
-        self.epocas=250
+        self.epocas=500
         
         self.numeroEntradas=3
         self.capasOculta=1
@@ -104,7 +104,7 @@ class MulticapaFinal:
                 #calcular el error
                 error =0.333*(self.arregloClase[i]-salida_calculada)
                 error_total +=np.sum(error**2)
-                print(f'Arreglo clase{self.arregloClase[i]}  {salida_calculada}')
+                #print(f'Arreglo clase{self.arregloClase[i]}  {salida_calculada}')
                 #hacemos retropagacion
                 self.retropropagacion(entrada,self.arregloClase[i])
             

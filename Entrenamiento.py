@@ -108,7 +108,7 @@ def capturarArea(event):
         ser.write(str(entrada).encode())
         
 # Inicializa la camara o la fuente de video
-cap = c.VideoCapture('http://192.168.100.20:4747/video')
+cap = c.VideoCapture('http://192.168.5.235:4747/video')
 
 
 etiquetaVideo= tk.Label(ventanaEntrenamiento)#papi se supone que ya saben como es un label
